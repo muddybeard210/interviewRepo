@@ -13,7 +13,9 @@ const demoApp = angular.module('demoApp', [ngRoute, ngAnimate]);
 demoApp.config(['$routeProvider', '$logProvider', function($routeProvider, $logProvider){
   $routeProvider
   .when('/', {
-    template: require('./view/home/home.html')
+    template: require('./view/home/home.html'),
+    controller: 'HomeController',
+    controllerAs: 'homeCtrl',
   })
   .otherwise({
     redirectTo: '/'
@@ -21,4 +23,4 @@ demoApp.config(['$routeProvider', '$logProvider', function($routeProvider, $logP
 }]);
 
 
-// require('./view/home');
+require('./view/home');
