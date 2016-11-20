@@ -1,14 +1,16 @@
 'use strict';
 
-
+// npm modules
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const CleanPlugin = require('clean-webpack-plugin');
 const ExtractText = require('extract-text-webpack-plugin');
 
+// module constants
 const production = process.env.NODE_ENV === 'production';
-const apiURL = process.end.API_URL || 'http://localhost:3000';
+const apiURL = process.env.API_URL || 'http://localhost:3000';
 
+// webpack config
 var plugins = [
   new ExtractText('bundle.css'),
   new webpack.DefinePlugin({
@@ -16,7 +18,7 @@ var plugins = [
   }),
 ];
 
-if(production){
+if (production){
   plugins = plugins.concat([
     new webpack.optimize.UglifyJsPlugin({
       mangle: true,
@@ -43,7 +45,7 @@ module.exports = {
   postcss: function(){
     return [autoprefixer];
   },
-  module: {
+  module:{
     loaders: [
       {
         test: /\.scss$/,
@@ -62,7 +64,7 @@ module.exports = {
         loader: 'html',
       },
       {
-        test: /\.(jpg|gif|png|ico)$/,
+        test: /\.(jpg|gif|png)$/,
         loader: 'file?name=img/[hash].[ext]',
       },
       {
