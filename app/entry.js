@@ -24,3 +24,6 @@ demoApp.config(['$routeProvider', '$logProvider', function($routeProvider, $logP
 
 
 require('./view/home');
+
+
+require('./services/get-transaction-service');
