@@ -21,28 +21,36 @@ function HomeController($log, $location, getTransactionService){
           return item;
         }
       }).forEach(function(obj) {
-	       let year = obj['transaction-time'].split("-").slice(0,1);
-         let month = obj['transaction-time'].split("-").slice(1,2);
-         vm.transactions2014[month].transactions.push(obj);
-        });
+	      //  let year = obj['transaction-time'].split('-').slice(0,1);
+        let month = obj['transaction-time'].split('-').slice(1,2);
+        vm.transactions2014[month].transactions.push(obj);
+      });
       vm.transactions.transactionsin2015 = vm.transactions.allTransactions.filter(function(item) {
         if(item['transaction-time'].includes('2015')) {
           return item;
         }
       }).forEach(function(obj) {
-	       let year = obj['transaction-time'].split("-").slice(0,1);
-         let month = obj['transaction-time'].split("-").slice(1,2);
-         vm.transactions2015[month].transactions.push(obj);
-        });
+	      //let year = obj['transaction-time'].split('-').slice(0,1);
+        let month = obj['transaction-time'].split('-').slice(1,2);
+        vm.transactions2015[month].transactions.push(obj);
+      });
       vm.transactions.transactionsin2016 = vm.transactions.allTransactions.filter(function(item) {
         if(item['transaction-time'].includes('2016')) {
           return item;
         }
       }).forEach(function(obj) {
-	       let year = obj['transaction-time'].split("-").slice(0,1);
-         let month = obj['transaction-time'].split("-").slice(1,2);
-         vm.transactions2016[month].transactions.push(obj);
-      })
+	      //let year = obj['transaction-time'].split('-').slice(0,1);
+        let month = obj['transaction-time'].split('-').slice(1,2);
+        vm.transactions2016[month].transactions.push(obj);
+      });
+      for (var month in vm.transactions2014) {
+        vm.getTotalIncome(vm.transactions2014[month]);
+        console.log(vm.transactions2014[month]);
+      }
+      for (var month in vm.transactions2015) {
+        vm.getTotalIncome(vm.transactions2015[month]);
+        console.log(vm.transactions2015[month]);
+      }
       for (var month in vm.transactions2016) {
         vm.getTotalIncome(vm.transactions2016[month]);
         console.log(vm.transactions2016[month]);
@@ -58,6 +66,8 @@ function HomeController($log, $location, getTransactionService){
 
 
   };
+
+
   vm.transactions2014 = {
     '01': {
       transactions: [],
@@ -249,15 +259,17 @@ function HomeController($log, $location, getTransactionService){
 
   };
   vm.getTotalIncome = function(month){
-    month.income = 0;
-    month.spent = 0;
+    let tempIncome = 0;
+    let tempSpent = 0;
     month.transactions.forEach((transaction) => {
       if(transaction.amount < 0){
-        month.spent += transaction.amount
+        tempSpent += (transaction.amount * 0.0001);
       } else{
-        month.income += transaction.amount
+        tempIncome += (transaction.amount * 0.0001);
 
       }
     });
-  }
+    month.income = Math.abs(tempIncome.toFixed(2));
+    month.spent = Math.abs(tempSpent.toFixed(2));
+  };
 }

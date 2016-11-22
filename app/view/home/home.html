@@ -4,20 +4,50 @@
     WASSUP
   </p>
   <ul id="transactionsin2014">
-    <li ng-repeat="(key, value) in homeCtrl.transactions2014">{{key}}:{{value}}</li>
+    <div ng-repeat="(month, value) in homeCtrl.transactions2014">
+      <p>
+        2014/{{month}}
+      </p>
+      <p>
+        Spent:${{value.spent}}
+      </p>
+      <p>
+        Income: ${{value.income}}
+      </p>
+
+    </div>
 
   </ul>
   <ul id="transactionsin2015">
-    <li ng-repeat="(key, value) in homeCtrl.transactions2015">{{key}}:{{value}}</li>
+    <div ng-repeat="(month, value) in homeCtrl.transactions2015">
+      <p>
+        2015/{{month}}
+      </p>
+      <p>
+        Spent:${{value.spent}}
+      </p>
+      <p>
+        Income: ${{value.income}}
+      </p>
 
+    </div>
 
   </ul>
   <ul id="transactionsin2016">
-    <li ng-repeat="(key, value) in homeCtrl.transactions2016">{{key}}:{{value}}</li>
+    <div ng-repeat="(month, value) in homeCtrl.transactions2016">
+      <p>
+        2016/{{month}}
+      </p>
+      <p>
+        Spent:${{value.spent}}
+      </p>
+      <p>
+        Income: ${{value.income}}
+      </p>
 
+    </div>
 
   </ul>
-
 
 
 </main>
