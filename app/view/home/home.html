@@ -4,22 +4,20 @@
     WASSUP
   </p>
   <ul id="transactionsin2014">
-    <div ng-repeat="(month, value) in homeCtrl.transactions2014">
+    <div ng-repeat="month in homeCtrl.transactions['2014'] track by $index">
       <p>
-        2014/{{month}}
+        {{month.spent}}
       </p>
+
       <p>
-        Spent:${{value.spent}}
-      </p>
-      <p>
-        Income: ${{value.income}}
+        {{month.income}}
       </p>
 
     </div>
 
   </ul>
-  <ul id="transactionsin2015">
-    <div ng-repeat="(month, value) in homeCtrl.transactions2015">
+  <!-- <ul id="transactionsin2015">
+    <div ng-repeat="(month, value) in homeCtrl.transactions">
       <p>
         2015/{{month}}
       </p>
@@ -34,7 +32,7 @@
 
   </ul>
   <ul id="transactionsin2016">
-    <div ng-repeat="(month, value) in homeCtrl.transactions2016">
+    <div ng-repeat="(month, value) in homeCtrl.transactions">
       <p>
         2016/{{month}}
       </p>
@@ -47,7 +45,7 @@
 
     </div>
 
-  </ul>
+  </ul> -->
 
 
 </main>
