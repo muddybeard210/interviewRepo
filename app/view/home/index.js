@@ -6,11 +6,14 @@ const angular = require('angular');
 
 const demoApp = angular.module('demoApp');
 
-demoApp.controller('HomeController', ['$log','getTransactionService',  HomeController]);
+demoApp.controller('HomeController', ['$log', '$window','getTransactionService',  HomeController]);
 
-function HomeController($log, getTransactionService){
+function HomeController($log, $window, getTransactionService){
   $log.log('homeCtrl hit');
   const vm = this;
+  vm.noDonutChecked = false;
+  vm.noCreditCardPayment = false;
+  vm.creditCardDetection = null;
   vm.allTransactions = {};
   vm.transactions = {};
   vm.averageMonth = {
@@ -22,6 +25,8 @@ function HomeController($log, getTransactionService){
     getTransactionService.fetchTransactions()
     .then(transactions => {
       vm.allTransactions = transactions.transactions;
+      if(vm.noDonutChecked) vm.allTransactions = vm.filterDonuts(vm.allTransactions);
+      if(vm.noCreditCardPayment) vm.allTransactions = vm.filterCreditCard(vm.allTransactions);
       vm.sortTrasaction(vm.allTransactions);
       for( var year in vm.transactions){
         vm.convertCents(vm.transactions[year]);
@@ -66,6 +71,26 @@ function HomeController($log, getTransactionService){
     object.income = vm.round((vm.averageMonth.income / 26), 2);
 
   };
+
+  vm.filterDonuts = function(array) {
+    return array.filter(function(obj){
+      if(obj.merchant !== "Krispy Kreme Donuts" || obj.merchant.includes('Dunkin')) return obj;
+    });
+  }
+  vm.filterCreditCard = function(array) {
+    return array.filter(function(obj){
+      if(obj.categorization === "Credit Card Payment"){
+        vm.creditCardDetection ++;
+
+      }
+      if(obj.categorization !== "Credit Card Payment"){
+        return obj;
+      }
+    });
+  }
+  vm.resetNumbers = function(){
+    $window.location.reload();
+  }
   //vm.round was taken from MDN for rounding numbers to the second decimal value
   vm.round = function(value, exp) {
     if (typeof exp === 'undefined' || +exp === 0)
