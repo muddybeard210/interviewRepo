@@ -13,15 +13,22 @@ function HomeController($log, getTransactionService){
   const vm = this;
   vm.allTransactions = {};
   vm.transactions = {};
+  vm.averageMonth = {
+    spent: 0,
+    income: 0,
+  };
 
   vm.fetchTransactionInfo = function(){
     getTransactionService.fetchTransactions()
     .then(transactions => {
       vm.allTransactions = transactions.transactions;
       vm.sortTrasaction(vm.allTransactions);
-      console.log(typeof vm.transactions['2015']['2015-02']);
+      for( var year in vm.transactions){
+        vm.convertCents(vm.transactions[year]);
+      }
+      vm.convertAverageMonth(vm.averageMonth);
+      console.log(vm.averageMonth);
     });
-
   };
 
   vm.sortTrasaction = function(array){
@@ -33,28 +40,49 @@ function HomeController($log, getTransactionService){
       if(!vm.transactions[year][month].allTransactions) vm.transactions[year][month].allTransactions = [];
       if(!vm.transactions[year][month].income) vm.transactions[year][month].income = 0;
       if(!vm.transactions[year][month].spent) vm.transactions[year][month].spent = 0;
-      if(obj.amount > 0) vm.transactions[year][month].income += obj.amount;
-      if(obj.amount < 0) vm.transactions[year][month].spent += Math.abs(obj.amount);
+      if(obj.amount > 0) {
+        vm.transactions[year][month].income += obj.amount * 0.0001;
+        vm.averageMonth.income += obj.amount * 0.0001;
+      }
+      if(obj.amount < 0) {
+        vm.transactions[year][month].spent += Math.abs(obj.amount * 0.0001);
+        vm.averageMonth.spent += Math.abs(obj.amount * 0.0001);
+      }
       vm.transactions[year][month].allTransactions.push(obj);
     });
     console.log(vm.transactions);
   };
+  vm.convertCents = function(year){
+    for (var month in year){
+      year[month].spent = vm.round(year[month].spent, 2);
+      year[month].income = vm.round(year[month].income, 2);
+      console.log(year[month].spent);
+    }
 
-  vm.getTotalIncome = function(month){
-    let tempIncome = 0;
-    let tempSpent = 0;
-    month.transactions.forEach((transaction) => {
-      if(transaction.amount < 0){
-        tempSpent += (transaction.amount * 0.0001);
-      } else{
-        tempIncome += (transaction.amount * 0.0001);
 
-      }
-    });
-    month.income = Math.abs(tempIncome.toFixed(2));
-    month.spent = Math.abs(tempSpent.toFixed(2));
   };
-  vm.testfunction = function(){
-    console.log(vm.transactions['2014']);
+  vm.convertAverageMonth = function(object){
+    object.spent = vm.round((vm.averageMonth.spent / 26), 2);
+    object.income = vm.round((vm.averageMonth.income / 26), 2);
+
+  };
+  //vm.round was taken from MDN for rounding numbers to the second decimal value
+  vm.round = function(value, exp) {
+    if (typeof exp === 'undefined' || +exp === 0)
+      return Math.round(value);
+
+    value = +value;
+    exp = +exp;
+
+    if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+      return NaN;
+
+    // Shift
+    value = value.toString().split('e');
+    value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+
+    // Shift back
+    value = value.toString().split('e');
+    return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
   };
 }
