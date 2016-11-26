@@ -5,17 +5,15 @@ const angular = require('angular');
 const demoApp = angular.module('demoApp');
 
 
-demoApp.factory('getTransactionService', ['$log', '$q', '$http', '$window', getTransactionService]);
+demoApp.factory('getTransactionService', ['$log', '$q', '$http', getTransactionService]);
 
 
-function getTransactionService($log, $q, $http, $window){
-  $log.debug('entered service.getTransactionService');
+function getTransactionService($log, $q, $http){
   let service = {};
   service.data = [];
 
 
   service.fetchTransactions = function(){
-    $log.debug('entered service.fetchTransactions');
 
     let url = 'https://2016.api.levelmoney.com/api/v2/core/get-all-transactions';
     let data = {

@@ -10,7 +10,7 @@ const ngAnimate = require('angular-animate');
 
 const demoApp = angular.module('demoApp', [ngRoute, ngAnimate]);
 
-demoApp.config(['$routeProvider', '$logProvider', function($routeProvider, $logProvider){
+demoApp.config(['$routeProvider', function($routeProvider){
   $routeProvider
   .when('/', {
     template: require('./view/home/home.html'),

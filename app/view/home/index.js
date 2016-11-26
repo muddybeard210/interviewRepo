@@ -9,7 +9,6 @@ const demoApp = angular.module('demoApp');
 demoApp.controller('HomeController', ['$log', '$window','getTransactionService',  HomeController]);
 
 function HomeController($log, $window, getTransactionService){
-  $log.log('homeCtrl hit');
   const vm = this;
   vm.noDonutChecked = false;
   vm.noCreditCardPayment = false;
@@ -23,8 +22,8 @@ function HomeController($log, $window, getTransactionService){
 
   vm.fetchTransactionInfo = function(){
     getTransactionService.fetchTransactions()
-    .then(transactions => {
-      vm.allTransactions = transactions.transactions;
+    .then(response => {
+      vm.allTransactions = response.transactions;
       if(vm.noDonutChecked) vm.allTransactions = vm.filterDonuts(vm.allTransactions);
       if(vm.noCreditCardPayment) vm.allTransactions = vm.filterCreditCard(vm.allTransactions);
       vm.sortTrasaction(vm.allTransactions);
@@ -32,7 +31,6 @@ function HomeController($log, $window, getTransactionService){
         vm.convertCents(vm.transactions[year]);
       }
       vm.convertAverageMonth(vm.averageMonth);
-      console.log(vm.averageMonth);
     });
   };
 
@@ -55,42 +53,44 @@ function HomeController($log, $window, getTransactionService){
       }
       vm.transactions[year][month].allTransactions.push(obj);
     });
-    console.log(vm.transactions);
   };
   vm.convertCents = function(year){
     for (var month in year){
       year[month].spent = vm.round(year[month].spent, 2);
       year[month].income = vm.round(year[month].income, 2);
-      console.log(year[month].spent);
     }
 
 
   };
   vm.convertAverageMonth = function(object){
-    object.spent = vm.round((vm.averageMonth.spent / 26), 2);
-    object.income = vm.round((vm.averageMonth.income / 26), 2);
+    let totalMonths = 0;
+    for (var year in vm.transactions){
+      totalMonths += Object.keys(vm.transactions[year]).length;
+    }
+    object.spent = vm.round((vm.averageMonth.spent / totalMonths), 2);
+    object.income = vm.round((vm.averageMonth.income / totalMonths), 2);
 
   };
 
   vm.filterDonuts = function(array) {
     return array.filter(function(obj){
-      if(obj.merchant !== "Krispy Kreme Donuts" || obj.merchant.includes('Dunkin')) return obj;
+      if(obj.merchant !== 'Krispy Kreme Donuts' || obj.merchant.includes('Dunkin')) return obj;
     });
-  }
+  };
   vm.filterCreditCard = function(array) {
     return array.filter(function(obj){
-      if(obj.categorization === "Credit Card Payment"){
+      if(obj.categorization === 'Credit Card Payment'){
         vm.creditCardDetection ++;
 
       }
-      if(obj.categorization !== "Credit Card Payment"){
+      if(obj.categorization !== 'Credit Card Payment'){
         return obj;
       }
     });
-  }
+  };
   vm.resetNumbers = function(){
     $window.location.reload();
-  }
+  };
   //vm.round was taken from MDN for rounding numbers to the second decimal value
   vm.round = function(value, exp) {
     if (typeof exp === 'undefined' || +exp === 0)
