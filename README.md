@@ -1,7 +1,13 @@
 # interviewRepo
 
+## To Run Program:
+1. Download Repo to Local Machine
+2. Make sure you have Node Package Manager installed
+3. Run ```npm install``` in your terminal
+4. Run ```webpack-dev-server --inline --hot``` to run on local machine on http://localhost:8080/#/
 
-Our API is documented at https://doc.level-labs.com - username: interview@levelmoney.com password: password2. We'd like you to write a program that:
+## Requirements:
+Our API is documented at https://doc.level-labs.com -  We'd like you to write a program that:
     ·         Loads a user's transactions from the GetAllTransactions endpoint
     ·         Determines how much money the user spends and makes in each of the months for which we have data, and in the "average" month. What "average" means is up to you.
     ·         Output these numbers in the following format (and optionally in a more pretty format, if you see fit)
